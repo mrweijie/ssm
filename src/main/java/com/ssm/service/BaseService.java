@@ -1,9 +1,10 @@
 package com.ssm.service;
 
+import com.ssm.entity.PageBean;
 import java.util.List;
 
 public interface BaseService<T> {
-    List<T> getAll();
+//    List<T> getAll();
 
     T getById(Integer id);
 
@@ -12,4 +13,6 @@ public interface BaseService<T> {
     int add(T t);
 
     int update(T t);
+
+//    PageBean<T> findByPage(int currentPage);
 }

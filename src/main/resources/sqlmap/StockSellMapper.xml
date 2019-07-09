@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.dao.StockSellMapper" >
+  <resultMap id="BaseResultMap" type="com.ssm.entity.StockSell" >
+    <id column="s_id" property="sId" jdbcType="INTEGER" />
+    <result column="s_number" property="sNumber" jdbcType="INTEGER" />
+    <result column="s_price" property="sPrice" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="INTEGER" />
+    <result column="s_stock_id" property="sStockId" jdbcType="INTEGER" />
+    <result column="s_update" property="sUpdate" jdbcType="TIMESTAMP" />
+    <result column="s_remarks" property="sRemarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    s_id, s_number, s_price, s_stock_id, s_update, s_remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_sell
+    where s_id = #{sId,jdbcType=INTEGER}
+  </select>
+  <!-- 根据分页数据start 和size查询数据 -->
+  <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    `stock_sell` ss
+    LEFT JOIN
+    stock s
+    ON
+    s.id = ss.s_stock_id
+    order by
+    ss.s_update
+    desc
+    <if test="start!=null and size!=null">
+      limit #{start},#{size}
+    </if>
+  </select>
+
+  <!-- 查询用户记录总数 -->
+  <select id="selectCount" resultType="int">
+		select count(*) from stock_sell
+	</select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stock_sell
+    where s_id = #{sId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ssm.entity.StockSell" >
+    insert into stock_sell (s_id, s_number, s_price, 
+      s_stock_id, s_update, s_remarks
+      )
+    values (#{sId,jdbcType=INTEGER}, #{sNumber,jdbcType=INTEGER}, #{sPrice,jdbcType=INTEGER}, 
+      #{sStockId,jdbcType=INTEGER}, #{sUpdate,jdbcType=TIMESTAMP}, #{sRemarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ssm.entity.StockSell" >
+    insert into stock_sell
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sId != null" >
+        s_id,
+      </if>
+      <if test="sNumber != null" >
+        s_number,
+      </if>
+      <if test="sPrice != null" >
+        s_price,
+      </if>
+      <if test="sStockId != null" >
+        s_stock_id,
+      </if>
+      <if test="sUpdate != null" >
+        s_update,
+      </if>
+      <if test="sRemarks != null" >
+        s_remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sId != null" >
+        #{sId,jdbcType=INTEGER},
+      </if>
+      <if test="sNumber != null" >
+        #{sNumber,jdbcType=INTEGER},
+      </if>
+      <if test="sPrice != null" >
+        #{sPrice,jdbcType=INTEGER},
+      </if>
+      <if test="sStockId != null" >
+        #{sStockId,jdbcType=INTEGER},
+      </if>
+      <if test="sUpdate != null" >
+        #{sUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sRemarks != null" >
+        #{sRemarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.entity.StockSell" >
+    update stock_sell
+    <set >
+      <if test="sNumber != null" >
+        s_number = #{sNumber,jdbcType=INTEGER},
+      </if>
+      <if test="sPrice != null" >
+        s_price = #{sPrice,jdbcType=INTEGER},
+      </if>
+      <if test="sStockId != null" >
+        s_stock_id = #{sStockId,jdbcType=INTEGER},
+      </if>
+      <if test="sUpdate != null" >
+        s_update = #{sUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sRemarks != null" >
+        s_remarks = #{sRemarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where s_id = #{sId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ssm.entity.StockSell" >
+    update stock_sell
+    set s_number = #{sNumber,jdbcType=INTEGER},
+      s_price = #{sPrice,jdbcType=INTEGER},
+      s_stock_id = #{sStockId,jdbcType=INTEGER},
+      s_update = #{sUpdate,jdbcType=TIMESTAMP},
+      s_remarks = #{sRemarks,jdbcType=VARCHAR}
+    where s_id = #{sId,jdbcType=INTEGER}
+  </update>
+</mapper>
