@@ -16,7 +16,7 @@ public class StockService implements BaseService<Stock> {
     @Autowired
     private StockMapper mapper;
 
-    public PageBean<Stock> getAll(int currentPage , int pageSize) {
+    public PageBean<Stock> getAll(int currentPage , int pageSize , String year , String month , String name) {
         HashMap<String,Object> map = new HashMap<String,Object>();
         PageBean<Stock> pageBean = new PageBean<Stock>();
         //当前页数
@@ -33,6 +33,15 @@ public class StockService implements BaseService<Stock> {
 
         map.put("start",(currentPage-1)*pageSize);
         map.put("size", pageBean.getPageSize());
+        if(!"".equals(year)){
+            map.put("year",year);
+        }
+        if(!"".equals(month)){
+            map.put("month",month);
+        }
+        if(!"".equals(name)){
+            map.put("name",name);
+        }
         //封装每页显示的数据
         List<Stock> lists = mapper.getAll(map);
         pageBean.setLists(lists);
@@ -46,6 +55,8 @@ public class StockService implements BaseService<Stock> {
 
     @Override
     public int deleteById(Integer id) {
+        mapper.deleteEnter(id);
+        mapper.deleteSell(id);
         return mapper.deleteByPrimaryKey(id);
     }
 
@@ -65,6 +76,10 @@ public class StockService implements BaseService<Stock> {
     @Override
     public int update(Stock stock) {
         return 0;
+    }
+
+    public List<Stock> selectAllName(){
+        return mapper.selectAllName();
     }
 
 }

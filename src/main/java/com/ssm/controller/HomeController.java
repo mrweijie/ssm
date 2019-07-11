@@ -2,6 +2,8 @@ package com.ssm.controller;
 
 import com.ssm.entity.PostBean;
 import com.ssm.entity.Stock;
+import com.ssm.entity.StockRemainder;
+import com.ssm.entity.StockSell;
 import com.ssm.service.MessageService;
 import com.ssm.service.StockRemainderService;
 import com.ssm.service.StockSellService;
@@ -13,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/home")
@@ -52,20 +58,25 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping(value = "/getStock", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String getStock(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage) {
-        return Tools.toJson(stockService.getAll(currentPage,1000));
+    public String getStock(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage,
+                           @RequestParam(value="year",defaultValue="",required=false)String year,
+                           @RequestParam(value="month",defaultValue="",required=false)String month,
+                           @RequestParam(value="name",defaultValue="",required=false)String name) {
+        return Tools.toJson(stockService.getAll(currentPage,5000,year,month,name));
     }
 
     @ResponseBody
     @RequestMapping(value = "/getStockRemainder", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String getStockRemainder(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage) {
-        return Tools.toJson(stockRemainderService.getAll(currentPage,50));
+    public String getStockRemainder(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage,
+                                    @RequestParam(value="search_date",defaultValue="",required=false)String search_date) {
+        return Tools.toJson(stockRemainderService.getAll(currentPage,50,search_date));
     }
 
     @ResponseBody
     @RequestMapping(value = "/getStockSell", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String getStockSell(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage) {
-        return Tools.toJson(stockSellService.getAll(currentPage,50));
+    public String getStockSell(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage,
+                                    @RequestParam(value="search_date",defaultValue="",required=false)String search_date) {
+        return Tools.toJson(stockSellService.getAll(currentPage,50,search_date));
     }
 
     @ResponseBody
@@ -89,7 +100,6 @@ public class HomeController {
     @ResponseBody
     @RequestMapping(value = "/delStock", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     public String delStock(Integer id) {
-        System.out.println(id);
         PostBean postBean = new PostBean();
         int state = stockService.deleteById(id);
         if(state == 1){
@@ -100,5 +110,73 @@ public class HomeController {
             postBean.setMessage("删除错误，找钟伟杰！");
         }
         return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getStockName", method = {RequestMethod.GET})
+    public List<Stock> getStockName() {
+        return stockService.selectAllName();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addStockRemainder", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String addStockRemainder(StockRemainder stockRemainder) {
+        int state = stockRemainderService.add(stockRemainder);
+        PostBean postBean = new PostBean();
+        if(state == 1){
+            postBean.setState("success");
+            postBean.setMessage("保存成功");
+        }else{
+            postBean.setState("error");
+            postBean.setMessage("保存错误，找钟伟杰！");
+        }
+        return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delStockRemainder", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String delStockRemainder(Integer id) {
+        PostBean postBean = new PostBean("success","删除成功");
+        int state = stockRemainderService.deleteById(id);
+        if(state != 1){
+            postBean.setState("error");
+            postBean.setMessage("删除错误，找钟伟杰！");
+        }
+        return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addStockSell", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String addStockSell(StockSell stockSell) {
+        int state = stockSellService.add(stockSell);
+        PostBean postBean = new PostBean("success","保存成功");
+        if(state != 1){
+            postBean.setState("error");
+            postBean.setMessage("保存错误，找钟伟杰！");
+        }
+        return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delStockSell", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String delStockSell(Integer id) {
+        PostBean postBean = new PostBean("success","删除成功");
+        int state = stockSellService.deleteById(id);
+        if(state != 1){
+            postBean.setState("error");
+            postBean.setMessage("删除错误，找钟伟杰！");
+        }
+        return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getdetail", method = {RequestMethod.GET})
+    public Map<String,List> getdetail(Integer id,String year, String month) {
+        List<StockRemainder> remainderList = stockRemainderService.getListByStockId(id, year, month);
+        List<StockSell> sellList = stockSellService.getListByStockId(id, year, month);
+        Map<String,List> map = new HashMap<String,List>();
+        map.put("enter",remainderList);
+        map.put("sell",sellList);
+        return map;
     }
 }

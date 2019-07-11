@@ -1,3 +1,4 @@
+<%@ taglib prefix="allowClear" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -15,23 +16,41 @@
     <link rel="stylesheet" href="../../vendor/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="../../vendor/font-awesome/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/bootstrap-select.min.css">
 </head>
 <body class="sidebar-fixed header-fixed">
 <div class="page-wrapper">
-    <%@ include file="header.html" %>
+    <%@ include file="header.jsp" %>
 
     <div class="main-container">
-        <%@ include file="sider.html" %>
+        <jsp:include page="sider.jsp"><jsp:param value="enter" name="pageTitle"/></jsp:include>
 
         <div class="content"> <div class="row">
             <div class="col-md-12" id="Stock">
                 <div class="card">
                     <div class="card-header bg-light">
-                        Enter Table
-                        <button id = "test">新增</button>
+                        <button id = "test"><i class="fa fa-plus"></i> 新增</button>
                     </div>
 
                     <div class="card-body">
+
+                        <div class="card-header bg-light">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        日期：
+                                        <input type="date" id="search_date" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <br>
+                                        <input type="button" onclick="search()" style="width:45%;text-align:center;padding: 5px;" value="筛选">
+                                        <input type="button" onclick="cancel()" style="width:45%;text-align:center;padding: 5px;" value="取消筛选">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover" id="list">
                                 <thead>
@@ -39,7 +58,7 @@
                                     <th>录入时间</th>
                                     <th>名称</th>
                                     <th>进货数量</th>
-                                    <th>单价</th>
+                                    <th>成本</th>
                                     <th>备注</th>
                                     <th>总进货金额</th>
                                     <th>操作</th>
@@ -80,29 +99,26 @@
             <div class="modal-body">
 
                 <div class="form-group">
-                    <label for="txt_departmentname">部门名称</label>
-                    <input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname" placeholder="部门名称">
-                    <select class="form-control" data-live-search="true">
-                        <option>123</option>
-                        <option>456</option>
+                    <label for="txt_name">产品名称</label>
+                    <select class="form-control selectpicker" id="txt_name" name="txt_name" data-live-search="true" onchange="setprice(this)">
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="txt_parentdepartment">上级部门</label>
-                    <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment" placeholder="上级部门">
+                    <label for="txt_price">进货价格</label>
+                    <input type="text" name="txt_price" class="form-control" id="txt_price" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="txt_departmentlevel">部门级别</label>
-                    <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel" placeholder="部门级别">
+                    <label for="txt_number">数量</label>
+                    <input type="text" name="txt_number" class="form-control" id="txt_number" placeholder="数量">
                 </div>
                 <div class="form-group">
-                    <label for="txt_statu">描述</label>
-                    <input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="状态">
+                    <label for="txt_remark">备注</label>
+                    <input type="text" name="txt_remark" class="form-control" id="txt_remark" placeholder="备注">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
-                <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+                <button type="button" id="btn_submit" class="btn btn-primary" onclick="save()"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
             </div>
         </div>
     </div>
@@ -113,6 +129,7 @@
 <script src="../../vendor/chart.js/chart.min.js"></script>
 <script src="../../js/carbon.js"></script>
 <script src="../../js/demo.js"></script>
+<script src="../../js/bootstrap-select.min.js"></script>
 </body>
 </html>
 <script>
@@ -120,25 +137,26 @@
         getList(1);
         $("#test").click(function () {
             $("#myModalLabel").text("新增");
+            $("#txt_number").val("");
+            $("#txt_remark").val("");
             $('#myModal').modal();
         });
-        $("#enterdetailed").parent().addClass("active");
-        $("#enterdetailed").parent().parent().parent().parent().toggleClass('open');
+        setTimeout(getStockName(),100);
     }
 
     var nowPage;
     var maxPage;
 
-    function getList(currPage) {
+    function getList(currPage,search_date) {
         $.ajax({
             type: "get",
             url: "/home/getStockRemainder",
             dataType: "json",
             data:{
-                currentPage : currPage
+                currentPage : currPage,
+                search_date : search_date
             },
             success: function (data) {
-                console.log(data);
                 var result = data.lists;
                 var tr = "<tbody>"
                 $("#list tbody").remove();
@@ -204,5 +222,102 @@
         if(!window.confirm('你确定要删除此条数据？')) {
             return;
         }
+        $.ajax({
+            type: "get",
+            url: "/home/delStockRemainder",
+            dataType: "json",
+            data:{
+                id : id
+            },
+            success: function (data) {
+                if(data.state == "error"){
+                    alert("删除失败！按F5刷新下页面");
+                }else if(data.state == "success"){
+                    $(ob).parent().parent().remove();
+                }
+
+            },
+            error: function () {
+                alert("发布失败！找钟伟杰！");
+            }
+        });
     }
+
+    function getStockName() {
+        $.ajax({
+            type: "get",
+            url: "/home/getStockName",
+            success: function (data) {
+                var list = data;
+                var options ="";
+                for (var i = 0; i < list.length; i++) {
+                    $('#txt_name').append("<option value=" + list[i].id + " data-price='"+list[i].price+"'>" + list[i].name + "</option>");
+                }
+                $("#txt_price").val(list[0].price);
+                $('#txt_name').selectpicker('refresh');
+                $('#txt_name').selectpicker('render');
+            },
+            error: function () {
+                alert("错误");
+            }
+        });
+    }
+
+    function setprice(ob) {
+        $("#txt_price").val($(ob).find("option:selected").attr("data-price"));
+    }
+
+    function save() {
+        var p_value = $("#txt_name").val();
+        var p_number = $("#txt_number").val();
+        var p_remark = $("#txt_remark").val();
+        if(p_value == ""){
+            alert("名称不能为空");
+            return;
+        }
+        if(p_number == ""){
+            alert("数量不能为空");
+            return;
+        }
+        var re = /^[0-9]+$/ ;
+        if(!re.test(p_number)){
+            alert("数量要为整数");
+            return;
+        }
+        $.ajax({
+            type: "get",
+            url: "/home/addStockRemainder",
+            dataType: "json",
+            data:{
+                srNumber : p_number,
+                srStockId : p_value,
+                srRemarks : p_remark
+            },
+            success: function (data) {
+                if(data.state == "fail"){
+                    alert(data.message);
+                    return;
+                }else if(data.state == "success"){
+                    window.location.href="/home/enter";
+                }
+
+            },
+            error: function () {
+                alert("发布失败！找钟伟杰！");
+            }
+        });
+    }
+
+    //筛选
+    function search() {
+        var search_date = $("#search_date").val();
+
+        getList(1,search_date);
+    }
+
+    function cancel() {
+        getList(1);
+        $("#search_date").val("");
+    }
+
 </script>

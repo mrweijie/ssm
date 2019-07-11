@@ -28,4 +28,10 @@ public interface StockMapper {
     int selectCount();
 
     int selectrepeat(@Param("name") String name);
+
+    List<Stock> selectAllName();
+
+    int deleteEnter(Integer id);
+
+    int deleteSell(Integer id);
 }

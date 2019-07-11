@@ -31,26 +31,45 @@
         stock s
     left JOIN
         (select
-            stock_remainder.sr_stock_id as r_id,
+            aa.sr_stock_id as r_id,
             count(1) as r_count ,
-            sum(sr_number) as r_sum
+            sum(aa.sr_number) as r_sum
         from
-            stock_remainder
+            stock_remainder aa
+        where
+            1=1
+        <if test="year!=null">
+            and year(aa.sr_update) = #{year}
+        </if>
+        <if test="month!=null">
+            and month(aa.sr_update) = #{month}
+        </if>
         group by
-            stock_remainder.sr_stock_id) r
+            aa.sr_stock_id) r
     ON
         s.id = r.r_id
     left JOIN
-        (select stock_sell.s_stock_id as s_id,
+        (select aa.s_stock_id as s_id,
             count(1) as s_count,
-            sum(s_number) as s_sum,
-            sum(s_number*s_price) as s_price
+            sum(aa.s_number) as s_sum,
+            sum(aa.s_number*aa.s_price) as s_price
         from
-            stock_sell
+            stock_sell aa
+        where
+        1=1
+        <if test="year!=null">
+            and year(aa.s_update) = #{year}
+        </if>
+        <if test="month!=null">
+            and month(aa.s_update) = #{month}
+        </if>
         group by
-            stock_sell.s_stock_id) ss
+            aa.s_stock_id) ss
     ON
         s.id = ss.s_id
+      <if test="name != null">
+          where s.name like CONCAT(CONCAT('%', #{name}), '%')
+      </if>
       <if test="start!=null and size!=null">
           limit #{start},#{size}
       </if>
@@ -82,10 +101,25 @@
       select count(*) from stock WHERE name = #{name,jdbcType=VARCHAR}
     </select>
 
+    <!-- 查询-->
+    <select id="selectAllName" resultMap="BaseResultMap">
+      select * from stock order by name
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from stock
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+    <!-- 删除从表入货-->
+    <delete id="deleteEnter" parameterType="java.lang.Integer" >
+      UPDATE stock_remainder set isdele = '1' WHERE sr_stock_id = #{id,jdbcType=INTEGER}
+  </delete>
+    <!-- 删除从表出售-->
+    <delete id="deleteSell" parameterType="java.lang.Integer" >
+      UPDATE stock_sell set isdele = '1' WHERE s_stock_id = #{id,jdbcType=INTEGER}
+  </delete>
+
   <insert id="insert" parameterType="com.ssm.entity.Stock" >
     insert into stock (id, name, price,remarks
       )

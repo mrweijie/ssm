@@ -19,4 +19,12 @@ public class PostBean {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public PostBean() {
+    }
+
+    public PostBean(String state, String message) {
+        this.state = state;
+        this.message = message;
+    }
 }

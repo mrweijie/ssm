@@ -275,7 +275,7 @@
 <script src="./js/demo.js"></script>
 <script>
     window.onload = function () {
-        window.location.href="/home/index";
+        // window.location.href="/home/index";
         // getStock(1);
     }
 
@@ -291,7 +291,6 @@
                 currentPage : currPage
             },
             success: function (data) {
-                console.log(data);
                 var result = data.lists;
                 var tr = ""
                 var sum_rs = 0;

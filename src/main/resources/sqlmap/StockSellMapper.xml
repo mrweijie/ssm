@@ -30,6 +30,19 @@
     stock s
     ON
     s.id = ss.s_stock_id
+    WHERE isdele is NULL
+    <if test="s_id!=null">
+      and ss.s_stock_id = #{s_id}
+    </if>
+    <if test="year!=null">
+      and year(ss.s_update) = #{year}
+    </if>
+    <if test="month!=null">
+      and month(ss.s_update) = #{month}
+    </if>
+    <if test="search_date!=null">
+      and date(ss.s_update) = #{search_date}
+    </if>
     order by
     ss.s_update
     desc
@@ -40,7 +53,7 @@
 
   <!-- 查询用户记录总数 -->
   <select id="selectCount" resultType="int">
-		select count(*) from stock_sell
+		select count(*) from stock_sell WHERE isdele is NULL
 	</select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
