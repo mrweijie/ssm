@@ -58,6 +58,7 @@
                                     <th class="table-th-css">出售数量</th>
                                     <th class="table-th-css">出售单价</th>
                                     <th class="table-th-css">总金额</th>
+                                    <th class="table-th-css">利润</th>
                                     <th class="table-th-css">备注</th>
                                     <th>操作</th>
                                 </tr>
@@ -172,6 +173,7 @@
                         "<td>"+(result[a].sNumber == null?0:result[a].sNumber)+"</td>" +
                         "<td>$"+result[a].sPrice+"</td>" +
                         "<td>$"+(result[a].sPrice * Number(result[a].sNumber == null?0:result[a].sNumber))+"</td>" +
+                        "<td>$"+((result[a].sPrice)-(result[a].price))*Number(result[a].sNumber == null?0:result[a].sNumber)+"</td>" +
                         "<td>"+(result[a].sRemarks == null?"无":result[a].sRemarks)+"</td>" +
                         "<td><button data-id="+result[a].sId+" onclick='delect(this)'>删除</button></td>" +
                         "</tr>";

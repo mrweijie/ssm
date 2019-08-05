@@ -90,13 +90,15 @@
                                     <th>名称</th>
                                     <th>单价</th>
                                     <th>库存</th>
-                                    <th>备注</th>
+                                    <th>库存总价</th>
                                     <th>进货次数</th>
                                     <th>进货数量</th>
                                     <th>总进货金额</th>
                                     <th>销售次数</th>
                                     <th>售出数量</th>
                                     <th>总售出金额</th>
+                                    <th>总利润</th>
+                                    <th>备注</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -253,30 +255,36 @@
             success: function (data) {
                 var result = data.lists;
                 var tr = ""
-                var sum_rs = 0;
-                var sum_rp = 0;
-                var sum_ss = 0;
-                var sum_sp = 0;
-                var sum_kc = 0;
+                var sum_rs = 0; //进货数量
+                var sum_rp = 0; //进货总价
+                var sum_ss = 0; //售出数量
+                var sum_sp = 0; //售出总价
+                var sum_kc = 0; //库存
+                var sum_kcp = 0;
+                var sum_lr = 0;
                 $("#list tbody").remove();
                 for(var a = 0;a < result.length;a++){
+                    sum_kcp = sum_kcp + ((result[a].r_sum == null?0:Number(result[a].r_sum)) - (result[a].s_sum == null? 0:Number(result[a].s_sum)))*result[a].price;
                     sum_rs = sum_rs + Number(result[a].r_sum);
                     sum_rp = sum_rp + (result[a].price * Number(result[a].r_sum == null?0:result[a].r_sum));
                     sum_ss = sum_ss + Number(result[a].s_sum);
                     sum_sp = sum_sp + Number(result[a].s_price);
                     sum_kc = sum_kc +((result[a].r_sum == null?0:Number(result[a].r_sum)) - (result[a].s_sum == null? 0:Number(result[a].s_sum)));
+                    sum_lr = sum_lr +((result[a].s_price == null?0:result[a].s_price)-(result[a].s_sum == null?"":result[a].s_sum)*result[a].price);
                     tr += "<tr>" +
                         // "<td>"+result[a].id+"</td>" +
                         "<td>"+result[a].name+"</td>" +
                         "<td>$"+result[a].price+"</td>" +
                         "<td>"+((result[a].r_sum == null?0:Number(result[a].r_sum)) - (result[a].s_sum == null? 0:Number(result[a].s_sum))) +"</td>" +
-                        "<td>"+(result[a].remarks == null?"无":result[a].remarks)+"</td>" +
+                        "<td>$"+((result[a].r_sum == null?0:Number(result[a].r_sum)) - (result[a].s_sum == null? 0:Number(result[a].s_sum)))*result[a].price +"</td>" +
                         "<td>"+(result[a].r_count == null?"":result[a].r_count)+"</td>" +
                         "<td>"+(result[a].r_sum == null?"":result[a].r_sum)+"</td>" +
                         "<td>$"+(result[a].price * Number(result[a].r_sum == null?0:result[a].r_sum))+"</td>" +
                         "<td>"+(result[a].s_count == null?"":result[a].s_count)+"</td>" +
                         "<td>"+(result[a].s_sum == null?"":result[a].s_sum)+"</td>" +
                         "<td>$"+(result[a].s_price == null?0:result[a].s_price)+"</td>" +
+                        "<td>$"+((result[a].s_price == null?0:result[a].s_price)-(result[a].s_sum == null?"":result[a].s_sum)*result[a].price)+"</td>" +
+                        "<td>"+(result[a].remarks == null?"无":result[a].remarks)+"</td>" +
                         "<td><button data-id="+result[a].id+" onclick='showdetail(this)'>详细</button><button  data-id="+result[a].id+" onclick='delect(this)'>删除</button></td>" +
                         "</tr>";
                 }
@@ -284,13 +292,15 @@
                     // "<td>"+"</td>" +
                     "<td>"+"</td>" +
                     "<td>"+sum_kc+"</td>" +
-                    "<td>"+"</td>" +
+                    "<td>$"+sum_kcp+"</td>" +
                     "<td>"+"</td>" +
                     "<td>"+sum_rs+"</td>" +
                     "<td>$"+sum_rp+"</td>" +
                     "<td>"+"</td>" +
                     "<td>"+sum_ss+"</td>" +
                     "<td>$"+sum_sp+"</td>" +
+                    "<td>$"+sum_lr+"</td>" +
+                    "<td>"+"</td>" +
                     "<td>"+""+"</td>" +
                     "</tr>"+tr;
                 tr += "</tbody>";
