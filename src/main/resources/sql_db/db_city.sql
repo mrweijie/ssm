@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2019-07-11 16:26:58
+Date: 2019-08-13 09:38:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,11 @@ CREATE TABLE `book` (
   `price` decimal(10,2) DEFAULT NULL,
   `publishDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of book
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for message
@@ -37,7 +41,11 @@ CREATE TABLE `message` (
   `description` varchar(30) NOT NULL,
   `content` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of message
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for person
@@ -51,6 +59,10 @@ CREATE TABLE `person` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Records of person
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for stock
 -- ----------------------------
 DROP TABLE IF EXISTS `stock`;
@@ -60,7 +72,14 @@ CREATE TABLE `stock` (
   `remarks` varchar(50) DEFAULT NULL,
   `price` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of stock
+-- ----------------------------
+INSERT INTO `stock` VALUES ('2', '11', null, '23');
+INSERT INTO `stock` VALUES ('8', '吸尘器', '', '150');
+INSERT INTO `stock` VALUES ('10', '炒锅', '', '500');
 
 -- ----------------------------
 -- Table structure for stock_remainder
@@ -74,7 +93,15 @@ CREATE TABLE `stock_remainder` (
   `sr_remarks` varchar(50) DEFAULT NULL,
   `isdele` int(5) DEFAULT NULL,
   PRIMARY KEY (`sr_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of stock_remainder
+-- ----------------------------
+INSERT INTO `stock_remainder` VALUES ('10', '15', '8', '2019-07-11 13:49:48', '', null);
+INSERT INTO `stock_remainder` VALUES ('11', '10', '9', '2019-07-11 13:49:57', '', '1');
+INSERT INTO `stock_remainder` VALUES ('12', '5', '10', '2019-07-12 13:04:02', '', null);
+INSERT INTO `stock_remainder` VALUES ('13', '25', '10', '2019-07-12 13:04:14', '', null);
 
 -- ----------------------------
 -- Table structure for stock_sell
@@ -89,4 +116,28 @@ CREATE TABLE `stock_sell` (
   `s_remarks` varchar(50) DEFAULT NULL,
   `isdele` int(5) DEFAULT NULL,
   PRIMARY KEY (`s_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of stock_sell
+-- ----------------------------
+INSERT INTO `stock_sell` VALUES ('9', '1', '300', '9', '2019-07-11 13:50:16', '', '1');
+INSERT INTO `stock_sell` VALUES ('10', '1', '600', '8', '2019-07-12 13:05:22', '', null);
+
+-- ----------------------------
+-- Table structure for student
+-- ----------------------------
+DROP TABLE IF EXISTS `student`;
+CREATE TABLE `student` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of student
+-- ----------------------------
+INSERT INTO `student` VALUES ('1', 'name', '16', 'add');
+INSERT INTO `student` VALUES ('3', '111', '22', '11');
