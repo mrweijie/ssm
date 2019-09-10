@@ -36,8 +36,8 @@ public class StockSellService implements BaseService<StockSell> {
         return 0;
     }
 
-    public PageBean<StockSell> getAll(int currentPage , int pageSize , String search_date) {
-        HashMap<String,Object> map = new HashMap<String,Object>();
+    public PageBean<StockSell> getAll(int currentPage, int pageSize, String search_date) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
         PageBean<StockSell> pageBean = new PageBean<StockSell>();
         //当前页数
         pageBean.setCurrPage(currentPage);
@@ -48,13 +48,13 @@ public class StockSellService implements BaseService<StockSell> {
         pageBean.setTotalCount(totalCount);
         //封装总页数
         double tc = totalCount;
-        Double num =Math.ceil(tc/pageSize);//向上取整
+        Double num = Math.ceil(tc / pageSize);//向上取整
         pageBean.setTotalPage(num.intValue());
 
-        if(!"".equals(search_date)){
-            map.put("search_date",search_date);
+        if (!"".equals(search_date)) {
+            map.put("search_date", search_date);
         }
-        map.put("start",(currentPage-1)*pageSize);
+        map.put("start", (currentPage - 1) * pageSize);
         map.put("size", pageBean.getPageSize());
         //封装每页显示的数据
         List<StockSell> lists = mapper.findByPage(map);
@@ -62,14 +62,14 @@ public class StockSellService implements BaseService<StockSell> {
         return pageBean;
     }
 
-    public List<StockSell> getListByStockId(Integer stockId , String year , String month){
-        HashMap<String,Object> map = new HashMap<String,Object>();
-        map.put("s_id",stockId);
-        if(!"".equals(year)){
-            map.put("year",year);
+    public List<StockSell> getListByStockId(Integer stockId, String year, String month) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("s_id", stockId);
+        if (!"".equals(year)) {
+            map.put("year", year);
         }
-        if(!"".equals(month)){
-            map.put("month",month);
+        if (!"".equals(month)) {
+            map.put("month", month);
         }
         List<StockSell> lists = mapper.findByPage(map);
         return lists;

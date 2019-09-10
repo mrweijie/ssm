@@ -16,8 +16,8 @@ public class StockService implements BaseService<Stock> {
     @Autowired
     private StockMapper mapper;
 
-    public PageBean<Stock> getAll(int currentPage , int pageSize , String year , String month , String name) {
-        HashMap<String,Object> map = new HashMap<String,Object>();
+    public PageBean<Stock> getAll(int currentPage, int pageSize, String year, String month, String name) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
         PageBean<Stock> pageBean = new PageBean<Stock>();
         //当前页数
         pageBean.setCurrPage(currentPage);
@@ -28,19 +28,19 @@ public class StockService implements BaseService<Stock> {
         pageBean.setTotalCount(totalCount);
         //封装总页数
         double tc = totalCount;
-        Double num =Math.ceil(tc/pageSize);//向上取整
+        Double num = Math.ceil(tc / pageSize);//向上取整
         pageBean.setTotalPage(num.intValue());
 
-        map.put("start",(currentPage-1)*pageSize);
+        map.put("start", (currentPage - 1) * pageSize);
         map.put("size", pageBean.getPageSize());
-        if(!"".equals(year)){
-            map.put("year",year);
+        if (!"".equals(year)) {
+            map.put("year", year);
         }
-        if(!"".equals(month)){
-            map.put("month",month);
+        if (!"".equals(month)) {
+            map.put("month", month);
         }
-        if(!"".equals(name)){
-            map.put("name",name);
+        if (!"".equals(name)) {
+            map.put("name", name);
         }
         //封装每页显示的数据
         List<Stock> lists = mapper.getAll(map);
@@ -62,11 +62,11 @@ public class StockService implements BaseService<Stock> {
 
     @Override
     public int add(Stock stock) {
-        if(stock.getName()==null){
+        if (stock.getName() == null) {
             return 0;
         }
         int num = mapper.selectrepeat(stock.getName());
-        if(num > 0){
+        if (num > 0) {
             return 2;
         }
         mapper.insert(stock);
@@ -78,7 +78,7 @@ public class StockService implements BaseService<Stock> {
         return 0;
     }
 
-    public List<Stock> selectAllName(){
+    public List<Stock> selectAllName() {
         return mapper.selectAllName();
     }
 

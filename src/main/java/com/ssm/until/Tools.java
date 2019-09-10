@@ -20,22 +20,23 @@ import java.util.jar.JarFile;
  * aip的工具类
  */
 public class Tools {
-    
-    public static String trimAll(String str){
-        String stre = str.replaceAll(" ","");
+
+    public static String trimAll(String str) {
+        String stre = str.replaceAll(" ", "");
         return stre;
     }
 
     /**
      * 把16进制字符串转换成字节数组
+     *
      * @param hex hexString
      * @return byte[]
      */
     public static byte[] hexStringToByte(String hex) {
 
-        hex = hex.replace(" ","");
+        hex = hex.replace(" ", "");
 
-        if(hex.isEmpty()){
+        if (hex.isEmpty()) {
             return null;
         }
         //把字符串转换为字符数组
@@ -51,9 +52,10 @@ public class Tools {
         }
         return result;
     }
+
     private static int toByte(char c) {
         byte b = (byte) "0123456789ABCDEF".indexOf(c);
-        if(b == -1) {
+        if (b == -1) {
             b = (byte) "0123456789abcdef".indexOf(c);
         }
         return b;
@@ -67,7 +69,7 @@ public class Tools {
      * 4个byte转换成为一个int数
      */
     public static int toInt(byte[] bytes) { //4个byte转化为一个int
-        if (bytes.length != 4){
+        if (bytes.length != 4) {
             return -1;
         }
         int iOutcome = 0;
@@ -85,23 +87,26 @@ public class Tools {
 
     /**
      * 对象转换成json
+     *
      * @param src obj,list,map.
      * @return
      * @throws JsonProcessingException
      * @throws IOException
      */
     public static String toJson(Object src) {
-        try{
+        try {
             ObjectMapper maper = new ObjectMapper();
             String json = maper.writeValueAsString(src);
             return json;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "toJson error Exception";
     }
+
     /**
      * json字符串转换成对象,list,Map
+     *
      * @param src
      * @param c
      * @return
@@ -109,7 +114,7 @@ public class Tools {
      * @throws JsonMappingException
      * @throws IOException
      */
-    public static Object toEntity(String src , Class c)  {
+    public static Object toEntity(String src, Class c) {
         ObjectMapper maper = new ObjectMapper();
         Object obj = null;
         try {
@@ -126,6 +131,7 @@ public class Tools {
 
     /**
      * 复制（文件或者文件夹）
+     *
      * @param oldPath
      * @param newPath
      */
@@ -214,6 +220,7 @@ public class Tools {
 
     /**
      * 在指定的路径或者jar包里查找FeedbackManager类的类路径
+     *
      * @param path 指定的路径（或者jar包）
      * @return 返回一个特定的class路径名(就是可以给反射直接用的类路径)
      * @throws Exception
@@ -248,17 +255,18 @@ public class Tools {
     /**
      * 自定义的，打印一行，不换行
      */
-    public static void p(Object o){
-        if(isP){
+    public static void p(Object o) {
+        if (isP) {
             System.out.print(o);
         }
 
     }
+
     /**
      * 自定义的，打印一行，换行
      */
-    public static void pln(Object o){
-        if(isPln){
+    public static void pln(Object o) {
+        if (isPln) {
             System.out.println(o);
         }
     }

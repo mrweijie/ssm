@@ -1,126 +1,126 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ssm.dao.StockRemainderMapper" >
-  <resultMap id="BaseResultMap" type="com.ssm.entity.StockRemainder" >
-    <id column="sr_id" property="srId" jdbcType="INTEGER" />
-    <result column="sr_number" property="srNumber" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="INTEGER" />
-    <result column="sr_stock_id" property="srStockId" jdbcType="INTEGER" />
-    <result column="sr_update" property="srUpdate" jdbcType="TIMESTAMP" />
-    <result column="sr_remarks" property="srRemarks" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.ssm.dao.StockRemainderMapper">
+    <resultMap id="BaseResultMap" type="com.ssm.entity.StockRemainder">
+        <id column="sr_id" property="srId" jdbcType="INTEGER"/>
+        <result column="sr_number" property="srNumber" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="sr_stock_id" property="srStockId" jdbcType="INTEGER"/>
+        <result column="sr_update" property="srUpdate" jdbcType="TIMESTAMP"/>
+        <result column="sr_remarks" property="srRemarks" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     sr_id, sr_number, sr_stock_id, sr_update, sr_remarks
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from stock_remainder
-    where sr_id = #{srId,jdbcType=INTEGER}
-  </select>
-  <!-- 根据分页数据start 和size查询数据 -->
-  <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
-    SELECT
-    *
-    FROM
-    `stock_remainder` sr
-    LEFT JOIN
-    stock s
-    ON
-    s.id = sr.sr_stock_id
-    WHERE isdele is NULL
-    <if test="s_id!=null">
-      and sr.sr_stock_id = #{s_id}
-    </if>
-    <if test="year!=null">
-      and year(sr.sr_update) = #{year}
-    </if>
-    <if test="month!=null">
-      and month(sr.sr_update) = #{month}
-    </if>
-    <if test="search_date!=null">
-      and date(sr.sr_update) = #{search_date}
-    </if>
-    order by
-    sr.sr_update
-    desc
-    <if test="start!=null and size!=null">
-      limit #{start},#{size}
-    </if>
-  </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from stock_remainder
+        where sr_id = #{srId,jdbcType=INTEGER}
+    </select>
+    <!-- 根据分页数据start 和size查询数据 -->
+    <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        `stock_remainder` sr
+        LEFT JOIN
+        stock s
+        ON
+        s.id = sr.sr_stock_id
+        WHERE isdele is NULL
+        <if test="s_id!=null">
+            and sr.sr_stock_id = #{s_id}
+        </if>
+        <if test="year!=null">
+            and year(sr.sr_update) = #{year}
+        </if>
+        <if test="month!=null">
+            and month(sr.sr_update) = #{month}
+        </if>
+        <if test="search_date!=null">
+            and date(sr.sr_update) = #{search_date}
+        </if>
+        order by
+        sr.sr_update
+        desc
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
 
-  <!-- 查询用户记录总数 -->
-  <select id="selectCount" resultType="int">
+    <!-- 查询用户记录总数 -->
+    <select id="selectCount" resultType="int">
 		select count(*) from stock_remainder WHERE isdele is NULL
 	</select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from stock_remainder
     where sr_id = #{srId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.ssm.entity.StockRemainder" >
+    <insert id="insert" parameterType="com.ssm.entity.StockRemainder">
     insert into stock_remainder (sr_id, sr_number, sr_stock_id, 
       sr_update, sr_remarks)
     values (#{srId,jdbcType=INTEGER}, #{srNumber,jdbcType=INTEGER}, #{srStockId,jdbcType=INTEGER}, 
       #{srUpdate,jdbcType=TIMESTAMP}, #{srRemarks,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.ssm.entity.StockRemainder" >
-    insert into stock_remainder
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="srId != null" >
-        sr_id,
-      </if>
-      <if test="srNumber != null" >
-        sr_number,
-      </if>
-      <if test="srStockId != null" >
-        sr_stock_id,
-      </if>
-      <if test="srUpdate != null" >
-        sr_update,
-      </if>
-      <if test="srRemarks != null" >
-        sr_remarks,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="srId != null" >
-        #{srId,jdbcType=INTEGER},
-      </if>
-      <if test="srNumber != null" >
-        #{srNumber,jdbcType=INTEGER},
-      </if>
-      <if test="srStockId != null" >
-        #{srStockId,jdbcType=INTEGER},
-      </if>
-      <if test="srUpdate != null" >
-        #{srUpdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="srRemarks != null" >
-        #{srRemarks,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.entity.StockRemainder" >
-    update stock_remainder
-    <set >
-      <if test="srNumber != null" >
-        sr_number = #{srNumber,jdbcType=INTEGER},
-      </if>
-      <if test="srStockId != null" >
-        sr_stock_id = #{srStockId,jdbcType=INTEGER},
-      </if>
-      <if test="srUpdate != null" >
-        sr_update = #{srUpdate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="srRemarks != null" >
-        sr_remarks = #{srRemarks,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where sr_id = #{srId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ssm.entity.StockRemainder" >
+    <insert id="insertSelective" parameterType="com.ssm.entity.StockRemainder">
+        insert into stock_remainder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="srId != null">
+                sr_id,
+            </if>
+            <if test="srNumber != null">
+                sr_number,
+            </if>
+            <if test="srStockId != null">
+                sr_stock_id,
+            </if>
+            <if test="srUpdate != null">
+                sr_update,
+            </if>
+            <if test="srRemarks != null">
+                sr_remarks,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="srId != null">
+                #{srId,jdbcType=INTEGER},
+            </if>
+            <if test="srNumber != null">
+                #{srNumber,jdbcType=INTEGER},
+            </if>
+            <if test="srStockId != null">
+                #{srStockId,jdbcType=INTEGER},
+            </if>
+            <if test="srUpdate != null">
+                #{srUpdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="srRemarks != null">
+                #{srRemarks,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ssm.entity.StockRemainder">
+        update stock_remainder
+        <set>
+            <if test="srNumber != null">
+                sr_number = #{srNumber,jdbcType=INTEGER},
+            </if>
+            <if test="srStockId != null">
+                sr_stock_id = #{srStockId,jdbcType=INTEGER},
+            </if>
+            <if test="srUpdate != null">
+                sr_update = #{srUpdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="srRemarks != null">
+                sr_remarks = #{srRemarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where sr_id = #{srId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ssm.entity.StockRemainder">
     update stock_remainder
     set sr_number = #{srNumber,jdbcType=INTEGER},
       sr_stock_id = #{srStockId,jdbcType=INTEGER},

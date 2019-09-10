@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ssm.dao.StockMapper" >
-  <resultMap id="BaseResultMap" type="com.ssm.entity.Stock" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="INTEGER" />
-    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
-    <result column="r_count" property="r_count" jdbcType="INTEGER"></result>
-    <result column="r_sum" property="r_sum" jdbcType="INTEGER"></result>
-    <result column="s_count" property="s_count" jdbcType="INTEGER"></result>
-    <result column="s_sum" property="s_sum" jdbcType="INTEGER"></result>
-    <result column="s_price" property="s_price" jdbcType="INTEGER"></result>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.ssm.dao.StockMapper">
+    <resultMap id="BaseResultMap" type="com.ssm.entity.Stock">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+        <result column="r_count" property="r_count" jdbcType="INTEGER"></result>
+        <result column="r_sum" property="r_sum" jdbcType="INTEGER"></result>
+        <result column="s_count" property="s_count" jdbcType="INTEGER"></result>
+        <result column="s_sum" property="s_sum" jdbcType="INTEGER"></result>
+        <result column="s_price" property="s_price" jdbcType="INTEGER"></result>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, name, price, remarks
   </sql>
     <!--查询页面 -->
-  <select id="getAll" resultMap="BaseResultMap" parameterType="Map">
-    SELECT
+    <select id="getAll" resultMap="BaseResultMap" parameterType="Map">
+        SELECT
         s.id,
         s.`name`,
         s.price,
@@ -27,17 +27,17 @@
         ss.s_count,
         ss.s_sum,
         ss.s_price
-    FROM
+        FROM
         stock s
-    left JOIN
+        left JOIN
         (select
-            aa.sr_stock_id as r_id,
-            count(1) as r_count ,
-            sum(aa.sr_number) as r_sum
+        aa.sr_stock_id as r_id,
+        count(1) as r_count ,
+        sum(aa.sr_number) as r_sum
         from
-            stock_remainder aa
+        stock_remainder aa
         where
-            1=1
+        1=1
         <if test="year!=null">
             and year(aa.sr_update) = #{year}
         </if>
@@ -45,16 +45,16 @@
             and month(aa.sr_update) = #{month}
         </if>
         group by
-            aa.sr_stock_id) r
-    ON
+        aa.sr_stock_id) r
+        ON
         s.id = r.r_id
-    left JOIN
+        left JOIN
         (select aa.s_stock_id as s_id,
-            count(1) as s_count,
-            sum(aa.s_number) as s_sum,
-            sum(aa.s_number*aa.s_price) as s_price
+        count(1) as s_count,
+        sum(aa.s_number) as s_sum,
+        sum(aa.s_number*aa.s_price) as s_price
         from
-            stock_sell aa
+        stock_sell aa
         where
         1=1
         <if test="year!=null">
@@ -64,32 +64,32 @@
             and month(aa.s_update) = #{month}
         </if>
         group by
-            aa.s_stock_id) ss
-    ON
+        aa.s_stock_id) ss
+        ON
         s.id = ss.s_id
-      <if test="name != null">
-          where s.name like CONCAT(CONCAT('%', #{name}), '%')
-      </if>
-      <if test="start!=null and size!=null">
-          limit #{start},#{size}
-      </if>
-  </select>
+        <if test="name != null">
+            where s.name like CONCAT(CONCAT('%', #{name}), '%')
+        </if>
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from stock
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <!-- 根据分页数据start 和size查询数据 -->
-  <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from stock
-    <if test="start!=null and size!=null">
-        limit #{start},#{size}
-    </if>
-  </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from stock
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!-- 根据分页数据start 和size查询数据 -->
+    <select id="findByPage" parameterType="Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from stock
+        <if test="start!=null and size!=null">
+            limit #{start},#{size}
+        </if>
+    </select>
 
     <!-- 查询用户记录总数 -->
     <select id="selectCount" resultType="int">
@@ -106,73 +106,73 @@
       select * from stock order by name
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from stock
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
     <!-- 删除从表入货-->
-    <delete id="deleteEnter" parameterType="java.lang.Integer" >
+    <delete id="deleteEnter" parameterType="java.lang.Integer">
       UPDATE stock_remainder set isdele = '1' WHERE sr_stock_id = #{id,jdbcType=INTEGER}
   </delete>
     <!-- 删除从表出售-->
-    <delete id="deleteSell" parameterType="java.lang.Integer" >
+    <delete id="deleteSell" parameterType="java.lang.Integer">
       UPDATE stock_sell set isdele = '1' WHERE s_stock_id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <insert id="insert" parameterType="com.ssm.entity.Stock" >
+    <insert id="insert" parameterType="com.ssm.entity.Stock">
     insert into stock (id, name, price,remarks
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},#{price,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.ssm.entity.Stock" >
-    insert into stock
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="price != null" >
-       price,
-      </if>
-      <if test="remarks != null" >
-        remarks,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=INTEGER},
-      </if>
-      <if test="remarks != null" >
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.entity.Stock" >
-    update stock
-    <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-        <if test="price != null" >
-            price = #{price,jdbcType=INTEGER},
-        </if>
-      <if test="remarks != null" >
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.ssm.entity.Stock" >
+    <insert id="insertSelective" parameterType="com.ssm.entity.Stock">
+        insert into stock
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null">
+                #{remarks,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ssm.entity.Stock">
+        update stock
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ssm.entity.Stock">
     update stock
     set name = #{name,jdbcType=VARCHAR},
       price = #{price, jdbcType=INTEGER},

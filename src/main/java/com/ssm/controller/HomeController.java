@@ -35,17 +35,17 @@ public class HomeController {
     @Autowired
     public StockSellService stockSellService;
 
-    @RequestMapping(value="/index")
+    @RequestMapping(value = "/index")
     public String index() {
         return "home";
     }
 
-    @RequestMapping(value="/enter")
+    @RequestMapping(value = "/enter")
     public String enter() {
         return "enter";
     }
 
-    @RequestMapping(value="/sell")
+    @RequestMapping(value = "/sell")
     public String sell() {
         return "sell";
     }
@@ -58,25 +58,25 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping(value = "/getStock", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String getStock(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage,
-                           @RequestParam(value="year",defaultValue="",required=false)String year,
-                           @RequestParam(value="month",defaultValue="",required=false)String month,
-                           @RequestParam(value="name",defaultValue="",required=false)String name) {
-        return Tools.toJson(stockService.getAll(currentPage,5000,year,month,name));
+    public String getStock(@RequestParam(value = "currentPage", defaultValue = "1", required = false) int currentPage,
+                           @RequestParam(value = "year", defaultValue = "", required = false) String year,
+                           @RequestParam(value = "month", defaultValue = "", required = false) String month,
+                           @RequestParam(value = "name", defaultValue = "", required = false) String name) {
+        return Tools.toJson(stockService.getAll(currentPage, 5000, year, month, name));
     }
 
     @ResponseBody
     @RequestMapping(value = "/getStockRemainder", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String getStockRemainder(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage,
-                                    @RequestParam(value="search_date",defaultValue="",required=false)String search_date) {
-        return Tools.toJson(stockRemainderService.getAll(currentPage,50,search_date));
+    public String getStockRemainder(@RequestParam(value = "currentPage", defaultValue = "1", required = false) int currentPage,
+                                    @RequestParam(value = "search_date", defaultValue = "", required = false) String search_date) {
+        return Tools.toJson(stockRemainderService.getAll(currentPage, 50, search_date));
     }
 
     @ResponseBody
     @RequestMapping(value = "/getStockSell", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String getStockSell(@RequestParam(value="currentPage",defaultValue="1",required=false)int currentPage,
-                                    @RequestParam(value="search_date",defaultValue="",required=false)String search_date) {
-        return Tools.toJson(stockSellService.getAll(currentPage,50,search_date));
+    public String getStockSell(@RequestParam(value = "currentPage", defaultValue = "1", required = false) int currentPage,
+                               @RequestParam(value = "search_date", defaultValue = "", required = false) String search_date) {
+        return Tools.toJson(stockSellService.getAll(currentPage, 50, search_date));
     }
 
     @ResponseBody
@@ -84,13 +84,13 @@ public class HomeController {
     public String addStock(Stock stock) {
         int state = stockService.add(stock);
         PostBean postBean = new PostBean();
-        if(state == 1){
+        if (state == 1) {
             postBean.setState("success");
             postBean.setMessage("保存成功");
-        }else if(state == 2){
+        } else if (state == 2) {
             postBean.setState("fail");
             postBean.setMessage("该产品已存在");
-        }else{
+        } else {
             postBean.setState("error");
             postBean.setMessage("保存错误，找钟伟杰！");
         }
@@ -102,10 +102,10 @@ public class HomeController {
     public String delStock(Integer id) {
         PostBean postBean = new PostBean();
         int state = stockService.deleteById(id);
-        if(state == 1){
+        if (state == 1) {
             postBean.setState("success");
             postBean.setMessage("删除成功");
-        }else{
+        } else {
             postBean.setState("error");
             postBean.setMessage("删除错误，找钟伟杰！");
         }
@@ -123,10 +123,10 @@ public class HomeController {
     public String addStockRemainder(StockRemainder stockRemainder) {
         int state = stockRemainderService.add(stockRemainder);
         PostBean postBean = new PostBean();
-        if(state == 1){
+        if (state == 1) {
             postBean.setState("success");
             postBean.setMessage("保存成功");
-        }else{
+        } else {
             postBean.setState("error");
             postBean.setMessage("保存错误，找钟伟杰！");
         }
@@ -136,9 +136,9 @@ public class HomeController {
     @ResponseBody
     @RequestMapping(value = "/delStockRemainder", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     public String delStockRemainder(Integer id) {
-        PostBean postBean = new PostBean("success","删除成功");
+        PostBean postBean = new PostBean("success", "删除成功");
         int state = stockRemainderService.deleteById(id);
-        if(state != 1){
+        if (state != 1) {
             postBean.setState("error");
             postBean.setMessage("删除错误，找钟伟杰！");
         }
@@ -149,8 +149,8 @@ public class HomeController {
     @RequestMapping(value = "/addStockSell", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     public String addStockSell(StockSell stockSell) {
         int state = stockSellService.add(stockSell);
-        PostBean postBean = new PostBean("success","保存成功");
-        if(state != 1){
+        PostBean postBean = new PostBean("success", "保存成功");
+        if (state != 1) {
             postBean.setState("error");
             postBean.setMessage("保存错误，找钟伟杰！");
         }
@@ -160,9 +160,9 @@ public class HomeController {
     @ResponseBody
     @RequestMapping(value = "/delStockSell", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     public String delStockSell(Integer id) {
-        PostBean postBean = new PostBean("success","删除成功");
+        PostBean postBean = new PostBean("success", "删除成功");
         int state = stockSellService.deleteById(id);
-        if(state != 1){
+        if (state != 1) {
             postBean.setState("error");
             postBean.setMessage("删除错误，找钟伟杰！");
         }
@@ -171,12 +171,12 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping(value = "/getdetail", method = {RequestMethod.GET})
-    public Map<String,List> getdetail(Integer id,String year, String month) {
+    public Map<String, List> getdetail(Integer id, String year, String month) {
         List<StockRemainder> remainderList = stockRemainderService.getListByStockId(id, year, month);
         List<StockSell> sellList = stockSellService.getListByStockId(id, year, month);
-        Map<String,List> map = new HashMap<String,List>();
-        map.put("enter",remainderList);
-        map.put("sell",sellList);
+        Map<String, List> map = new HashMap<String, List>();
+        map.put("enter", remainderList);
+        map.put("sell", sellList);
         return map;
     }
 }
