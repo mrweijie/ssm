@@ -29,6 +29,12 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="/home/customer" class="nav-link <%=(request.getParameter("pageTitle")).equals("customer") ? "active":""%>">
+                    <i class="icon icon-user"></i> 客户
+                </a>
+            </li>
+
 
             <%--<li class="nav-item nav-dropdown">--%>
                 <%--<a href="#" class="nav-link nav-dropdown-toggle">--%>

@@ -27,7 +27,7 @@
             <div class="col-md-12" id="Stock">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <button id = "test"><i class="fa fa-plus"></i> 新增</button>
+                        <button id = "test"><i class="fa fa-plus"></i> 新增出售</button>
                     </div>
 
                     <div class="card-body">

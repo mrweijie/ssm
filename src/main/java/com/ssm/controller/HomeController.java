@@ -1,13 +1,7 @@
 package com.ssm.controller;
 
-import com.ssm.entity.PostBean;
-import com.ssm.entity.Stock;
-import com.ssm.entity.StockRemainder;
-import com.ssm.entity.StockSell;
-import com.ssm.service.MessageService;
-import com.ssm.service.StockRemainderService;
-import com.ssm.service.StockSellService;
-import com.ssm.service.StockService;
+import com.ssm.entity.*;
+import com.ssm.service.*;
 import com.ssm.until.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +30,9 @@ public class HomeController {
     @Autowired
     public StockSellService stockSellService;
 
+    @Autowired
+    public CustomerService customerService;
+
     @RequestMapping(value = "/index")
     public String index() {
         return "home";
@@ -48,6 +46,11 @@ public class HomeController {
     @RequestMapping(value = "/sell")
     public String sell() {
         return "sell";
+    }
+
+    @RequestMapping(value = "/customer")
+    public String customer(){
+        return "customer";
     }
 
     @ResponseBody
@@ -179,4 +182,42 @@ public class HomeController {
         map.put("sell", sellList);
         return map;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/addCustomer", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String addCustomer(Customer customer){
+        int state = 1;
+        customer.setTime(new Date());
+        if(customer.getId() != null){
+            state = customerService.update(customer);
+        }else {
+            state = customerService.add(customer);
+        }
+        PostBean postBean = new PostBean("success", "保存成功");
+        if (state != 1) {
+            postBean.setState("error");
+            postBean.setMessage("保存错误，找钟伟杰！");
+        }
+        return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delCustomer", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String delCustomer(Integer id){
+        int status = customerService.deleteById(id);
+        PostBean postBean = new PostBean("success","删除成功");
+        if(status != 1){
+            postBean.setState("error");
+            postBean.setMessage("保存错误，找钟伟杰！");
+        }
+        return Tools.toJson(postBean);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getAllCustomer", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
+    public String getAllCustomer(@RequestParam(value = "currentPage", defaultValue = "1", required = false) int currentPage,
+                                 @RequestParam(value = "name", defaultValue = "", required = false) String name){
+        return Tools.toJson(customerService.getAll(currentPage,5000,name));
+    }
+
 }

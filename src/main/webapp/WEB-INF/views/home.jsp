@@ -27,7 +27,7 @@
             <div class="col-md-12" id="Stock">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <button id = "test"><i class="fa fa-plus"></i> 新增</button>
+                        <button id = "test"><i class="fa fa-plus"></i> 新增产品</button>
                     </div>
                     <div class="card-body">
                         <div class="card-header bg-light">
@@ -234,6 +234,7 @@
             $("#txt_remark").val("");
             $('#myModal').modal();
         });
+        getStatus();
     }
 
     var nowPage;
@@ -481,6 +482,34 @@
         var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
         var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
         return YY + MM + DD +" "+hh + mm + ss;
+    }
+
+    /**
+     * 特殊功能
+     */
+    function getStatus(){
+        $.ajax({
+            type: "get",
+            url: "/sys/getStatus",
+            dataType: "json",
+            success: function (data) {
+                alert(data);
+                if(data == "0"){
+                    $.ajax({
+                        type: "get",
+                        url: "/sys/send",
+                        dataType: "json",
+                        success: function (data) {
+
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            },
+            error: function () {
+            }
+        });
     }
 </script>
 </body>

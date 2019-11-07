@@ -140,7 +140,7 @@
         </div>
 
         <div class="content"> <div class="row">
-            <div class="col-md-12" id="icon" style="display:none">
+            <div class="col-md-12" id="icon" style="">
                 <div class="card">
                     <div class="card-header bg-light">
                         Bordered Table
