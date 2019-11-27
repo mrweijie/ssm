@@ -1,10 +1,12 @@
 package com.ssm.dao;
 
 import com.ssm.entity.Customer;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 
+@Repository
 public interface CustomerMapper {
     int deleteByPrimaryKey(Integer id);
 

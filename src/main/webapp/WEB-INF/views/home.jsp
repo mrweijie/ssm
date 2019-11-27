@@ -483,34 +483,6 @@
         var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
         return YY + MM + DD +" "+hh + mm + ss;
     }
-
-    /**
-     * 特殊功能
-     */
-    function getStatus(){
-        $.ajax({
-            type: "get",
-            url: "/sys/getStatus",
-            dataType: "json",
-            success: function (data) {
-                alert(data);
-                if(data == "0"){
-                    $.ajax({
-                        type: "get",
-                        url: "/sys/send",
-                        dataType: "json",
-                        success: function (data) {
-
-                        },
-                        error: function () {
-                        }
-                    });
-                }
-            },
-            error: function () {
-            }
-        });
-    }
 </script>
 </body>
 </html>
