@@ -41,20 +41,20 @@ public class EmailService {
     private CustomerMapper customerMapper;
 
     @PostConstruct
-    public void send(){
+    public void send() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("a","");
+        map.put("a", "");
         List<Stock> lists = mapper.getAll(map);
         List<StockRemainder> remainderList = remainderMapper.findByPage(map);
         List<StockSell> sellList = sellMapper.findByPage(map);
         List<Customer> customerList = customerMapper.getAll(map);
-        send("stock",Tools.toJson(lists));
-        send("stockRemainderList",Tools.toJson(remainderList));
-        send("stockSellList",Tools.toJson(sellList));
-        send("customerList",Tools.toJson(customerList));
+        send("stock", Tools.toJson(lists));
+        send("stockRemainderList", Tools.toJson(remainderList));
+        send("stockSellList", Tools.toJson(sellList));
+        send("customerList", Tools.toJson(customerList));
     }
 
-    public void send(String title,String content){
+    public void send(String title, String content) {
         try {
             Properties properties = new Properties();
             properties.put("mail.transport.protocol", "smtp");// 连接协议
@@ -70,9 +70,9 @@ public class EmailService {
             // 设置senfer email address
             message.setFrom(new InternetAddress("****" + DOMAIN_NAME_QQ));
             // 设置 Addressee email address
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress("*****"+DOMAIN_NAME_163));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress("*****" + DOMAIN_NAME_163));
             // 设置 title
-            message.setSubject(DateFormat.getDateInstance(DateFormat.LONG,Locale.CHINA).format(Calendar.getInstance().getTime())+"_" + title);
+            message.setSubject(DateFormat.getDateInstance(DateFormat.LONG, Locale.CHINA).format(Calendar.getInstance().getTime()) + "_" + title);
             // 设置 content
             message.setText(content);
             // 得到Transport对象
@@ -82,7 +82,7 @@ public class EmailService {
             // send email
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

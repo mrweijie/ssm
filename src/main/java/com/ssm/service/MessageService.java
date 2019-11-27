@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MessageService implements BaseService<Message>{
+public class MessageService implements BaseService<Message> {
 
     @Autowired
     private MessageMapper mapper;

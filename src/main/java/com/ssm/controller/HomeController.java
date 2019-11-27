@@ -49,7 +49,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/customer")
-    public String customer(){
+    public String customer() {
         return "customer";
     }
 
@@ -185,12 +185,12 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping(value = "/addCustomer", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String addCustomer(Customer customer){
+    public String addCustomer(Customer customer) {
         int state = 1;
         customer.setTime(new Date());
-        if(customer.getId() != null){
+        if (customer.getId() != null) {
             state = customerService.update(customer);
-        }else {
+        } else {
             state = customerService.add(customer);
         }
         PostBean postBean = new PostBean("success", "保存成功");
@@ -203,10 +203,10 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping(value = "/delCustomer", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
-    public String delCustomer(Integer id){
+    public String delCustomer(Integer id) {
         int status = customerService.deleteById(id);
-        PostBean postBean = new PostBean("success","删除成功");
-        if(status != 1){
+        PostBean postBean = new PostBean("success", "删除成功");
+        if (status != 1) {
             postBean.setState("error");
             postBean.setMessage("保存错误，找钟伟杰！");
         }
@@ -216,8 +216,8 @@ public class HomeController {
     @ResponseBody
     @RequestMapping(value = "/getAllCustomer", method = {RequestMethod.GET}, produces = "application/json;charset=UTF-8")
     public String getAllCustomer(@RequestParam(value = "currentPage", defaultValue = "1", required = false) int currentPage,
-                                 @RequestParam(value = "name", defaultValue = "", required = false) String name){
-        return Tools.toJson(customerService.getAll(currentPage,5000,name));
+                                 @RequestParam(value = "name", defaultValue = "", required = false) String name) {
+        return Tools.toJson(customerService.getAll(currentPage, 5000, name));
     }
 
 }
