@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.dao.MeetingMapper" >
+  <resultMap id="BaseResultMap" type="com.ssm.entity.Meeting" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="publishDate" property="publishdate" jdbcType="TIMESTAMP" />
+    <result column="beginDate" property="begindate" jdbcType="VARCHAR" />
+    <result column="endingDate" property="endingdate" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, context, publishDate, beginDate, endingDate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from meeting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from meeting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ssm.entity.Meeting" >
+    insert into meeting (id, title, context, 
+      publishDate, beginDate, endingDate, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, 
+      #{publishdate,jdbcType=TIMESTAMP}, #{begindate,jdbcType=VARCHAR}, #{endingdate,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ssm.entity.Meeting" >
+    insert into meeting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="context != null" >
+        context,
+      </if>
+      <if test="publishdate != null" >
+        publishDate,
+      </if>
+      <if test="begindate != null" >
+        beginDate,
+      </if>
+      <if test="endingdate != null" >
+        endingDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="context != null" >
+        #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="publishdate != null" >
+        #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="begindate != null" >
+        #{begindate,jdbcType=VARCHAR},
+      </if>
+      <if test="endingdate != null" >
+        #{endingdate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.entity.Meeting" >
+    update meeting
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="context != null" >
+        context = #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="publishdate != null" >
+        publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="begindate != null" >
+        beginDate = #{begindate,jdbcType=VARCHAR},
+      </if>
+      <if test="endingdate != null" >
+        endingDate = #{endingdate,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ssm.entity.Meeting" >
+    update meeting
+    set title = #{title,jdbcType=VARCHAR},
+      context = #{context,jdbcType=VARCHAR},
+      publishDate = #{publishdate,jdbcType=TIMESTAMP},
+      beginDate = #{begindate,jdbcType=VARCHAR},
+      endingDate = #{endingdate,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询用户记录总数 -->
+  <select id="selectCount" resultType="int">
+		select count(*) from meeting
+	</select>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="Map">
+    select * from meeting
+  </select>
+</mapper>

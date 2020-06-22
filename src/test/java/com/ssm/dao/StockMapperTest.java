@@ -33,8 +33,6 @@ public class StockMapperTest {
 
     @Test
     public void getAll() {
-//        List<Stock> stocks = mapper.getAll();
-//        System.out.println(stocks.size());
     }
 
     @Test
